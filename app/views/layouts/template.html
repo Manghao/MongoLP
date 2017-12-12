@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>MongoDB</title>
-    <style>
-        button {
-            background: none;
-            border: none;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<title>MongoDB</title>
+	<link rel="stylesheet" type="text/css" href="node_modules/leaflet/dist/leaflet.css">
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/leaflet/dist/leaflet.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="public/css/app.css">
+	<script src="public/js/app.js"></script>
 </head>
 <body>
 
-    <ul>
-        {{#data}}
-            <li>{{ name }}</li>
-        {{/data}}
-    </ul>
+	<div id="map"></div>
 
 </body>
 </html>
