@@ -86,7 +86,7 @@ refreshCollection = () => {
             });
     });
 
-    /*db.collection("stationsVeloStan").remove({});
+    db.collection("stationsVeloStan").remove({});
 
     http.get('http://www.velostanlib.fr/service/carto', (result) => {
         let body = '';
@@ -123,7 +123,7 @@ refreshCollection = () => {
             .on('error', (e) => {
                 console.log('Error : ' + e.message);
             });
-    });*/
+    });
 };
 
 app.listen(3000, () => {
