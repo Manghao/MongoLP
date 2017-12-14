@@ -57,7 +57,7 @@ window.VeloNancy = (() => {
             icon: this.locationIcon
         })
             .addTo(this.map)
-            .bindPopup(`<h4>${data.name}</h4>${data.fullAddress}`);
+            .bindPopup(`<h6>${data.name}</h6>${data.fullAddress}`);
     }
 
     module.addParking = (data) => {
@@ -65,7 +65,7 @@ window.VeloNancy = (() => {
             icon: this.parkingIcon
         })
             .addTo(this.map)
-            .bindPopup(`<h4>${data.nom}</h4><p>${data.adresse}</p><p>Libres: ${data.places}/${data.capacite}</p>`);
+            .bindPopup(`<h6>${data.nom.toUpperCase()}</h6>${data.adresse} - ${data.nom}<p>Places libres: ${data.places}/${data.capacite}</p>`);
     }
 
     return module;
