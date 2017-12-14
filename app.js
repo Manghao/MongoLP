@@ -47,39 +47,21 @@ refreshCollection = () => {
 
     db.collection("parkingsVoitures").remove({});
 
-    https.get('https://geoservices.grand-nancy.org/arcgis/rest/services/public/VOIRIE_Parking/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=html', (result) => {
+    https.get('https://geoservices.grand-nancy.org/arcgis/rest/services/public/VOIRIE_Parking/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=pjson', (result) => {
         let body = '';
         result.on('data', (data) => {
             body += data;
         })
             .on('end', () => {
-                let parser = new x2j.Parser({ explicitArray : false });
-                parser.parseString(body, (errParser, resultParser) => {
-                	let parkings = resultParser.html.body.div.a;
-                	parkings.forEach((park) => {
-                        let one = park['$'];
-                        one.details = {};
-
-                        https.get(`https://geoservices.grand-nancy.org${one.href}?f=pjson`, (result) => {
-                            let body = '';
-                            result.on('data', (data) => {
-                                body += data;
-                            })
-                                .on('end', () => {
-                                    let parking = JSON.parse(body);
-                                    let park = {};
-                                    for(let key in parking.feature.attributes) {
-                                    	park[key.toLowerCase()] = parking.feature.attributes[key];
-									}
-                                    park['geometry'] = parking.feature.geometry;
-                                    db.collection('parkingsVoitures').insert(park);
-                                })
-                                .on('error', (e) => {
-                                    console.log('Error : ' + e.message);
-                                });
-						});
-					});
-                });
+                let parkings = JSON.parse(body).features;
+                for (let i = 0; i < parkings.length; i++) {
+                    let park = {};
+                    for(let key in parkings[i].attributes) {
+                        park[key.toLowerCase()] = parkings[i].attributes[key];
+                    }
+                    park['geometry'] = parkings[i].geometry;
+                    db.collection('parkingsVoitures').insert(park);
+                }
             })
             .on('error', (e) => {
                 console.log('Error : ' + e.message);
