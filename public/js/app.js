@@ -61,7 +61,7 @@ window.VeloNancy = (() => {
     }
 
     module.addParking = (data) => {
-        L.marker([data.geometry.x, data.geometry.y], {
+        L.marker([data.geometry.y, data.geometry.x], {
             icon: this.parkingIcon
         })
             .addTo(this.map)
