@@ -61,11 +61,18 @@ window.VeloNancy = (() => {
     }
 
     module.addParking = (data) => {
+        let horaire = $('<p>').addClass('text-success').text('Ouvert');
+        let places_libres = $('<p>').text(`Places libres: ${data.places}/${data.capacite}`)[0].outerHTML;
+        if (data.places === null) {
+            horaire = $('<p>').addClass('text-danger').text('Fermé');
+            places_libres = '';
+        }
+
         L.marker([data.geometry.y, data.geometry.x], {
             icon: this.parkingIcon
         })
             .addTo(this.map)
-            .bindPopup(`<h6>${data.nom.toUpperCase()}</h6>${data.adresse} - ${data.nom}<p>Places libres: ${data.places}/${data.capacite}</p>`);
+            .bindPopup(`<h6>${data.nom.toUpperCase()}</h6><span>${data.adresse} - ${data.nom}</span>${places_libres}${horaire[0].outerHTML}`);
     }
 
     return module;
