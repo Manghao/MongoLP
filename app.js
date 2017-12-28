@@ -8,6 +8,8 @@ let https = require('https');
 let x2j = require('xml2js');
 let app = express();
 
+const AppController = require('./app/controllers/AppController');
+
 mongoose.connect('mongodb://localhost:27017/Mongodb', {
     useMongoClient: true,
     promiseLibrary: global.Promise
@@ -22,24 +24,15 @@ require.extensions['.html'] = (module, filename) => {
 
 app.get('/',(req, res) => {
     refreshCollection();
-    const template = require('./app/views/layouts/template.html');
-    res.send(mustache.render(template));
+    AppController.getApi(req, res);
 });
 
 app.get('/stations', (req, res) => {
-    db.collection("stationsVeloStan").find().toArray((error, results) => {
-        if (error) throw error;
-
-        res.send(results);
-    });
+    AppController.getStations(db, req, res);
 });
 
 app.get('/parkings', (req, res) => {
-    db.collection("parkingsVoitures").find().toArray((error, results) => {
-        if (error) throw error;
-
-        res.send(results);
-    });
+    AppController.getParkings(db, req, res);
 });
 
 refreshCollection = () => {
