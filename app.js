@@ -6,20 +6,42 @@ let http = require('http');
 let https = require('https');
 let x2j = require('xml2js');
 let app = express();
+let session = require('express-session');
+let flash = require('connect-flash');
 
+const bodyParser = require('body-parser');
 const AppController = require('./controllers/AppController');
 
-mongoose.connect('mongodb://192.168.99.100:27017/tdmongo', {
+mongoose.connect('mongodb://localhost:27017/Mongodb', {
     useMongoClient: true,
     promiseLibrary: global.Promise
 });
 let db = mongoose.connection;
 
 app.use(express.static(__dirname));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({ cookie: { maxAge: 60000 },
+    secret: 'woot',
+    resave: false,
+    saveUninitialized: false}));
+app.use(flash());
 
 app.get('/',(req, res) => {
+    AppController.getHome(req, res);
+});
+
+app.get('/register', (req, res) => {
+    AppController.register(req, res);
+});
+
+app.post('/createAccount', (req, res) => {
+    AppController.createAccount(req, res);
+});
+
+app.get('/map',(req, res) => {
     refreshCollection();
-    AppController.getApi(req, res);
+    AppController.getMap(req, res);
 });
 
 app.get('/stations', (req, res) => {

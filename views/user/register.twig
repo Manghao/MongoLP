@@ -1,0 +1,48 @@
+{% extends "template/layout.twig" %}
+
+{% set title = 'Inscription' %}
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-danger mt-3" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <div class="ui middle aligned center aligned auth grid">
+        <div class="card mt-3 mb-3">
+            <h4 class="card-header">
+                <i class="user icon"></i>Créer un compte
+            </h4>
+            <div class="card-body">
+                <form class="ui large form" action="createAccount" method="POST">
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-firstname"><i class="fa fa-user"></i></span>
+                        <input type="text" class="form-control" name="first_name" placeholder="Prénom" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-lastname"><i class="fa fa-user"></i></span>
+                        <input type="text" class="form-control" name="last_name" placeholder="Nom" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-email"><i class="fa fa-envelope"></i></span>
+                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-pwd"><i class="fa fa-key"></i></span>
+                        <input type="password" class="form-control" name="password" placeholder="Mot de passe" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-pwd-confirm"><i class="fa fa-key"></i></span>
+                        <input type="password" class="form-control" name="password_confirm" placeholder="Confirmation mot de passe" required>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary mb-3" value="Valider">
+                </form>
+                <div class="message">
+                    Vous possédez déjà un compte ? <a href="login">Connectez-vous</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
