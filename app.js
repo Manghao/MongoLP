@@ -10,9 +10,10 @@ let session = require('express-session');
 let flash = require('connect-flash');
 
 const bodyParser = require('body-parser');
+const config = require('./config/config');
 const AppController = require('./controllers/AppController');
 
-mongoose.connect('mongodb://localhost:27017/Mongodb', {
+mongoose.connect('mongodb://' + config.getConfig(), {
     useMongoClient: true,
     promiseLibrary: global.Promise
 });
