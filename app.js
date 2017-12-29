@@ -18,7 +18,7 @@ app.use(express.static(__dirname));
 
 app.get('/',(req, res) => {
     refreshCollection();
-    res.render('index/index.twig');
+    res.render('index/index.twig'); // Rendu de la vue
 });
 
 app.get('/stations', (req, res) => {
