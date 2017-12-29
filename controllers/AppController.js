@@ -1,8 +1,7 @@
-let mustache = require('mustache');
+let Twig = require("twig");
 
 exports.getApi = (req, res) => {
-    const template = require('../views/layouts/template.html');
-    res.send(mustache.render(template));
+    res.render('index/index.twig');
 };
 
 exports.getStations = (db, req, res) => {

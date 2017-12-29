@@ -5,7 +5,6 @@ let fs = require('fs');
 let http = require('http');
 let https = require('https');
 let x2j = require('xml2js');
-let Twig = require("twig");
 let app = express();
 
 const AppController = require('./controllers/AppController');
@@ -20,7 +19,6 @@ app.use(express.static(__dirname));
 
 app.get('/',(req, res) => {
     refreshCollection();
-    res.render('index/index.twig'); // Rendu de la vue
     AppController.getApi(req, res);
 });
 
