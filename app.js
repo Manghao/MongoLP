@@ -8,6 +8,8 @@ let x2j = require('xml2js');
 let Twig = require("twig");
 let app = express();
 
+const AppController = require('./controllers/AppController');
+
 mongoose.connect('mongodb://192.168.99.100:27017/tdmongo', {
     useMongoClient: true,
     promiseLibrary: global.Promise
@@ -19,22 +21,15 @@ app.use(express.static(__dirname));
 app.get('/',(req, res) => {
     refreshCollection();
     res.render('index/index.twig'); // Rendu de la vue
+    AppController.getApi(req, res);
 });
 
 app.get('/stations', (req, res) => {
-    db.collection("stationsVeloStan").find().toArray((error, results) => {
-        if (error) throw error;
-
-        res.send(results);
-    });
+    AppController.getStations(db, req, res);
 });
 
 app.get('/parkings', (req, res) => {
-    db.collection("parkingsVoitures").find().toArray((error, results) => {
-        if (error) throw error;
-
-        res.send(results);
-    });
+    AppController.getParkings(db, req, res);
 });
 
 refreshCollection = () => {
@@ -47,7 +42,7 @@ refreshCollection = () => {
         result.on('data', (data) => {
             body += data;
         })
-        .on('end', () => {
+		.on('end', () => {
             let parkings = JSON.parse(body).features;
             for (let i = 0; i < parkings.length; i++) {
                 let park = {};
