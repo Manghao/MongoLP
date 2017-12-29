@@ -56,16 +56,16 @@ window.VeloNancy = (() => {
         L.marker([data.lat, data.lng], {
             icon: this.locationIcon
         })
-            .addTo(this.map)
-            .bindPopup(`<h4>${data.name}</h4>${data.fullAddress}`);
+        .addTo(this.map)
+        .bindPopup(`<h4>${data.name}</h4>${data.fullAddress}`);
     }
 
     module.addParking = (data) => {
         L.marker([data.geometry.x, data.geometry.y], {
             icon: this.parkingIcon
         })
-            .addTo(this.map)
-            .bindPopup(`<h4>${data.nom}</h4><p>${data.adresse}</p><p>Libres: ${data.places}/${data.capacite}</p>`);
+        .addTo(this.map)
+        .bindPopup(`<h4>${data.nom}</h4><p>${data.adresse}</p><p>Libres: ${data.places}/${data.capacite}</p>`);
     }
 
     return module;

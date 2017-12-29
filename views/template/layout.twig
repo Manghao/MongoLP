@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MongoDB</title>
+	<link rel="stylesheet" type="text/css" href="node_modules/leaflet/dist/leaflet.css">
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/leaflet/dist/leaflet.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="public/css/app.css">
+	<link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<script src="public/js/app.js"></script>
+
+</head>
+<body>
+
+	{% include 'template/navbar.twig' %}
+
+	<div class="container">
+		{% block content %}{% endblock %}
+	</div>
+
+</body>
+</html>
