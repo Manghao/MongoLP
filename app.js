@@ -34,7 +34,7 @@ app.get('/',(req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    if (req.session.user) {
+    if (!req.session.user) {
         UserController.register(req, res);
     } else {
         res.redirect('/');
@@ -46,7 +46,7 @@ app.post('/createAccount', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    if (req.session.user) {
+    if (!req.session.user) {
         UserController.login(req, res);
     } else {
         res.redirect('/');
