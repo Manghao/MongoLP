@@ -12,6 +12,7 @@ let flash = require('connect-flash');
 const bodyParser = require('body-parser');
 const config = require('./config/config');
 const AppController = require('./controllers/AppController');
+const UserController = require('./controllers/UserController');
 
 mongoose.connect('mongodb://' + config.getConfig(), {
     useMongoClient: true,
@@ -33,11 +34,19 @@ app.get('/',(req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    AppController.register(req, res);
+    UserController.register(req, res);
 });
 
 app.post('/createAccount', (req, res) => {
-    AppController.createAccount(req, res);
+    UserController.createAccount(req, res);
+});
+
+app.get('/login', (req, res) => {
+    UserController.login(req, res);
+});
+
+app.post('/validLogin', (req, res) => {
+    UserController.validLogin(req, res);
 });
 
 app.get('/map',(req, res) => {

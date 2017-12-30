@@ -10,9 +10,6 @@ const userSchema = new mongoose.Schema({
     passwordResetExpires: Date,
 }, { timestamps: true });
 
-/**
- * Password hash middleware.
- */
 userSchema.pre('save', function save(next) {
     const user = this;
     if (!user.isModified('password')) { return next(); }
@@ -25,6 +22,11 @@ userSchema.pre('save', function save(next) {
         });
     });
 });
+
+userSchema.methods.comparePassword = function comparePassword(candidatePassword) {
+    const user = this;
+    return bcrypt.compareSync(candidatePassword, user.password);
+};
 
 const User = mongoose.model('User', userSchema);
 
