@@ -49,6 +49,10 @@ app.post('/validLogin', (req, res) => {
     UserController.validLogin(req, res);
 });
 
+app.get('/logout', (req, res) => {
+    UserController.logout(req, res);
+});
+
 app.get('/map',(req, res) => {
     refreshCollection();
     AppController.getMap(req, res);

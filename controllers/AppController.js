@@ -1,7 +1,5 @@
-let Twig = require("twig");
-
 exports.getHome = (req, res) => {
-    res.render('index/index.twig');
+    res.render('index/index.twig', { auth: req.session.user, success: req.flash().success });
 };
 
 exports.getMap = (req, res) => {

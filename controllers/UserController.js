@@ -4,12 +4,7 @@ let xss = require('xss');
 const User = require('../models/User');
 
 exports.register = (req, res) => {
-    let error = req.flash().error;
-    if (error === undefined) {
-        res.render('user/register.twig');
-    } else {
-        res.render('user/register.twig', { error: error[0] });
-    }
+    res.render('user/register.twig', { error: req.flash().error });
 };
 
 exports.createAccount = (req, res) => {
@@ -32,7 +27,7 @@ exports.createAccount = (req, res) => {
 
                     return User.findOne({ email: email }, (err, existingUser) => {
                         if (existingUser) {
-                            req.flash('error', 'L\'email rentré est déjà utilisé !');
+                            req.flash('error', { 'msg': 'L\'email rentré est déjà utilisé !' });
                             return res.redirect('register');
                         } else {
                             newUser.save();
@@ -40,28 +35,23 @@ exports.createAccount = (req, res) => {
                         }
                     });
                 } else {
-                    req.flash('error', 'Le mot de passe et la confirmation sont différents !');
+                    req.flash('error', { 'msg': 'Le mot de passe et la confirmation sont différents !' });
                 }
             } else {
-                req.flash('error', 'L\'email rentré est incorrect !');
+                req.flash('error', { 'msg': 'L\'email rentré est incorrect !' });
             }
         } else {
-            req.flash('error', 'Le nom rentré est incorrect !');
+            req.flash('error', { 'msg': 'Le nom rentré est incorrect !' });
         }
     } else {
-        req.flash('error', 'Le prénom rentré est incorrect !');
+        req.flash('error', { 'msg': 'Le prénom rentré est incorrect !' });
     }
 
     res.redirect('register');
 };
 
 exports.login = (req, res) => {
-    let error = req.flash().error;
-    if (error === undefined) {
-        res.render('user/login.twig');
-    } else {
-        res.render('user/login.twig', { error: error[0] });
-    }
+    res.render('user/login.twig', { error: req.flash().error });
 };
 
 exports.validLogin = (req, res) => {
@@ -71,25 +61,28 @@ exports.validLogin = (req, res) => {
     if (validator.isEmail(email)) {
         User.findOne({ email: email }, (err, existingUser) => {
             if (existingUser) {
-                let user = new User({
-                    first_name: existingUser.first_name,
-                    last_name: existingUser.last_name,
-                    email: existingUser.email,
-                    password: existingUser.password
-                });
-                if (user.comparePassword(password)) {
+                if (existingUser.comparePassword(password)) {
+                    req.session.user = { "first_name": existingUser.first_name, "email": existingUser.email };
+                    req.flash('success', { 'msg': 'Vous êtes maintenant connecté !' });
                     return res.redirect('/');
                 } else {
-                    req.flash('error', 'Mot de passe incorrect !');
+                    req.flash('error', { 'msg': 'Mot de passe incorrect !' });
                     return res.redirect('login');
                 }
             } else {
-                req.flash('error', 'Ce compte n\'existe pas !');
+                req.flash('error', { 'msg': 'Ce compte n\'existe pas !' });
                 return res.redirect('login');
             }
         });
     } else {
-        req.flash('error', 'Email est incorrect !');
+        req.flash('error', { 'msg': 'Email est incorrect !' });
         res.redirect('login');
     }
+};
+
+exports.logout = (req, res) => {
+    req.flash('success', { 'msg': 'Vous avez bien été déconnecté !' });
+    req.session.user = undefined;
+
+    res.redirect('/');
 };

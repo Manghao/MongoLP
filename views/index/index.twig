@@ -1,6 +1,12 @@
 {% extends "template/layout.twig" %}
 
 {% block content %}
+    {% if success %}
+		<div class="alert alert-success mt-3" role="alert">
+            {{ success[0].msg }}
+		</div>
+    {% endif %}
+
     <div class="card mt-3">
 		<div class="card-body">
 			<h1>Accueil</h1>
