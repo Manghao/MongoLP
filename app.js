@@ -34,7 +34,11 @@ app.get('/',(req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    UserController.register(req, res);
+    if (req.session.user) {
+        UserController.register(req, res);
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.post('/createAccount', (req, res) => {
@@ -42,7 +46,11 @@ app.post('/createAccount', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    UserController.login(req, res);
+    if (req.session.user) {
+        UserController.login(req, res);
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.post('/validLogin', (req, res) => {
@@ -50,7 +58,11 @@ app.post('/validLogin', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-    UserController.logout(req, res);
+    if (req.session.user) {
+        UserController.logout(req, res);
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.get('/map',(req, res) => {
