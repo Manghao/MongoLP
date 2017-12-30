@@ -1,10 +1,11 @@
 let validator = require('validator');
 let xss = require('xss');
+let url = require('url');
 
 const User = require('../models/User');
 
 exports.register = (req, res) => {
-    res.render('user/register.twig', { error: req.flash().error });
+    res.render('user/register.twig', { query: req.query, error: req.flash().error });
 };
 
 exports.createAccount = (req, res) => {
@@ -28,10 +29,22 @@ exports.createAccount = (req, res) => {
                     return User.findOne({ email: email }, (err, existingUser) => {
                         if (existingUser) {
                             req.flash('error', { 'msg': 'L\'email rentré est déjà utilisé !' });
-                            return res.redirect('register');
+                            return res.redirect(url.format({
+                                pathname: 'register',
+                                query: {
+                                    first_name: firstName,
+                                    last_name: lastName,
+                                    email: email
+                                }
+                            }));
                         } else {
                             newUser.save();
-                            return res.redirect('login');
+                            return res.redirect(url.format({
+                                pathname: 'login',
+                                query: {
+                                    email: email
+                                }
+                            }));
                         }
                     });
                 } else {
@@ -47,11 +60,18 @@ exports.createAccount = (req, res) => {
         req.flash('error', { 'msg': 'Le prénom rentré est incorrect !' });
     }
 
-    res.redirect('register');
+    res.redirect(url.format({
+        pathname: 'register',
+        query: {
+            first_name: firstName,
+            last_name: lastName,
+            email: email
+        }
+    }));
 };
 
 exports.login = (req, res) => {
-    res.render('user/login.twig', { error: req.flash().error });
+    res.render('user/login.twig', { query: req.query, error: req.flash().error });
 };
 
 exports.validLogin = (req, res) => {
@@ -67,16 +87,31 @@ exports.validLogin = (req, res) => {
                     return res.redirect('/');
                 } else {
                     req.flash('error', { 'msg': 'Mot de passe incorrect !' });
-                    return res.redirect('login');
+                    return res.redirect(url.format({
+                        pathname: 'login',
+                        query: {
+                            email: email
+                        }
+                    }));
                 }
             } else {
                 req.flash('error', { 'msg': 'Ce compte n\'existe pas !' });
-                return res.redirect('login');
+                return res.redirect(url.format({
+                    pathname: 'login',
+                    query: {
+                        email: email
+                    }
+                }));
             }
         });
     } else {
         req.flash('error', { 'msg': 'Email est incorrect !' });
-        res.redirect('login');
+        res.redirect(url.format({
+            pathname: 'login',
+            query: {
+                email: email
+            }
+        }));
     }
 };
 
