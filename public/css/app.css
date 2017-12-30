@@ -2,3 +2,7 @@
 	width: 100%;
 	height: 600px;
 }
+
+input[type="submit"], button {
+	cursor: pointer;
+}
