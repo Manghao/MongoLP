@@ -65,6 +65,26 @@ app.get('/logout', (req, res) => {
     }
 });
 
+app.get('/account', (req, res) => {
+    if (req.session.user) {
+        UserController.getAccount(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/edit', (req, res) => {
+    if (req.session.user) {
+        UserController.editAccount(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/update', (req, res) => {
+    UserController.update(req, res);
+});
+
 app.get('/map',(req, res) => {
     refreshCollection();
     AppController.getMap(req, res);

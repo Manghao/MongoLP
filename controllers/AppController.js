@@ -1,5 +1,5 @@
 exports.getHome = (req, res) => {
-    res.render('index/index.twig', { auth: req.session.user, success: req.flash().success });
+    res.render('index/home.twig', { auth: req.session.user, success: req.flash().success });
 };
 
 exports.getMap = (req, res) => {

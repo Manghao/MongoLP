@@ -121,3 +121,87 @@ exports.logout = (req, res) => {
 
     res.redirect('/');
 };
+
+exports.getAccount = (req, res) => {
+    User.findOne({ email: req.session.user.email }, (err, existingUser) => {
+        if (existingUser) {
+            res.render('user/account.twig', { auth: req.session.user, user: existingUser, success: req.flash().success });
+        } else {
+            res.redirect('/');
+        }
+    });
+};
+
+exports.editAccount = (req, res) => {
+    User.findOne({ email: req.session.user.email }, (err, existingUser) => {
+        if (existingUser) {
+            res.render('user/edit.twig', { auth: req.session.user, user: existingUser, query: req.query, error: req.flash().error });
+        } else {
+            res.redirect('/');
+        }
+    });
+};
+
+exports.update = (req, res) => {
+    let firstName = xss(req.body.first_name);
+    let lastName = xss(req.body.last_name);
+    let email = xss(req.body.email);
+
+    if (validator.isAlpha(firstName)) {
+        if (validator.isAlpha(lastName)) {
+            if (validator.isEmail(email)) {
+                return User.findOne({ email: req.session.user.email }, (err, currentUser) => {
+                    if (currentUser) {
+                        currentUser.first_name = firstName;
+                        currentUser.last_name = lastName;
+
+                        if (currentUser.email === email) {
+                            currentUser.save();
+
+                            req.flash('success', { 'msg': 'Vos informations ont bien été modifiées !' });
+                            return res.redirect('account');
+                        } else {
+                            return User.findOne({ email: email }, (err, existingUser) => {
+                                if (existingUser) {
+                                    req.flash('error', { 'msg': 'L\'email rentré est déjà utilisé !' });
+                                    return res.redirect(url.format({
+                                        pathname: 'edit',
+                                        query: {
+                                            first_name: firstName,
+                                            last_name: lastName,
+                                            email: email
+                                        }
+                                    }));
+                                } else {
+                                    req.session.user.email = email;
+                                    currentUser.email = email;
+                                    currentUser.save();
+
+                                    req.flash('success', { 'msg': 'Vos informations ont bien été modifiées !' });
+                                    return res.redirect('account');
+                                }
+                            });
+                        }
+                    } else {
+                        res.redirect('/');
+                    }
+                });
+            } else {
+                req.flash('error', { 'msg': 'L\'email rentré est incorrect !' });
+            }
+        } else {
+            req.flash('error', { 'msg': 'Le nom rentré est incorrect !' });
+        }
+    } else {
+        req.flash('error', { 'msg': 'Le prénom rentré est incorrect !' });
+    }
+
+    res.redirect(url.format({
+        pathname: 'edit',
+        query: {
+            first_name: firstName,
+            last_name: lastName,
+            email: email
+        }
+    }));
+};
