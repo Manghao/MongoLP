@@ -82,7 +82,7 @@ exports.validLogin = (req, res) => {
         User.findOne({ email: email }, (err, existingUser) => {
             if (existingUser) {
                 if (existingUser.comparePassword(password)) {
-                    req.session.user = { "first_name": existingUser.first_name, "email": existingUser.email };
+                    req.session.user = { "first_name": existingUser.first_name, "last_name": existingUser.last_name, "email": existingUser.email };
                     req.flash('success', { 'msg': 'Vous êtes maintenant connecté !' });
                     return res.redirect('/');
                 } else {
@@ -152,6 +152,8 @@ exports.update = (req, res) => {
             if (validator.isEmail(email)) {
                 return User.findOne({ email: req.session.user.email }, (err, currentUser) => {
                     if (currentUser) {
+                        req.session.user.first_name = firstName;
+                        req.session.user.last_name = lastName;
                         currentUser.first_name = firstName;
                         currentUser.last_name = lastName;
 
