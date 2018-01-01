@@ -71,7 +71,7 @@ exports.createAccount = (req, res) => {
 };
 
 exports.login = (req, res) => {
-    res.render('user/login.twig', { query: req.query, error: req.flash().error });
+    res.render('user/login.twig', { query: req.query, success: req.flash().success, error: req.flash().error });
 };
 
 exports.validLogin = (req, res) => {
@@ -119,7 +119,7 @@ exports.logout = (req, res) => {
     req.flash('success', { 'msg': 'Vous avez bien été déconnecté !' });
     req.session.user = undefined;
 
-    res.redirect('/');
+    res.redirect('login');
 };
 
 exports.getAccount = (req, res) => {
