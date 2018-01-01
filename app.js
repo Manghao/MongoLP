@@ -85,6 +85,18 @@ app.post('/update', (req, res) => {
     UserController.update(req, res);
 });
 
+app.get('/editPwd', (req, res) => {
+    if (req.session.user) {
+        UserController.editPwd(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/updatePwd', (req, res) => {
+    UserController.updatePwd(req, res);
+});
+
 app.get('/map',(req, res) => {
     refreshCollection();
     AppController.getMap(req, res);

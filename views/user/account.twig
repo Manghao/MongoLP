@@ -3,7 +3,7 @@
 {% set title = 'Mon compte' %}
 
 {% block content %}
-    {% if error %}
+    {% if success %}
         <div class="alert alert-success mt-3" role="alert">
             {{ success[0].msg }}
         </div>
@@ -29,6 +29,7 @@
                 </div>
 
                 <a class="btn btn-primary" href="edit">Modifier</a>
+                <a class="btn btn-primary float-right" href="editPwd">Changer de mot de passe</a>
             </div>
         </div>
     </div>

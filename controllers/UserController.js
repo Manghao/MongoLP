@@ -207,3 +207,43 @@ exports.update = (req, res) => {
         }
     }));
 };
+
+exports.editPwd = (req, res) => {
+    User.findOne({ email: req.session.user.email }, (err, existingUser) => {
+        if (existingUser) {
+            res.render('user/editPwd.twig', { error: req.flash().error });
+        } else {
+            res.redirect('/');
+        }
+    });
+};
+
+exports.updatePwd = (req, res) => {
+    let passwordOld = xss(req.body.password_old);
+    let passwordNew = xss(req.body.password_new);
+    let passwordConfirm = xss(req.body.password_confirm);
+
+    User.findOne({ email: req.session.user.email }, (err, currentUser) => {
+        if (currentUser) {
+            if (currentUser.comparePassword(passwordOld)) {
+                if (validator.equals(passwordNew, passwordConfirm)) {
+                    if (!validator.equals(passwordOld, passwordNew)) {
+                        currentUser.password = passwordNew;
+                        currentUser.save();
+                    }
+
+                    req.flash('success', { 'msg': 'Votre mot de passe a bien été modifié !' });
+                    res.redirect('account');
+                } else {
+                    req.flash('error', {'msg': 'Le nouveau mot de passe et la confirmation sont différents !'});
+                    res.redirect('editPwd');
+                }
+            } else {
+                req.flash('error', {'msg': 'L\'ancien mot de passe n\'est pas bon !'});
+                res.redirect('editPwd');
+            }
+        } else {
+            res.redirect('/');
+        }
+    });
+};
