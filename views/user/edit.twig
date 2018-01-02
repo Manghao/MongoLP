@@ -1,0 +1,38 @@
+{% extends "template/layout.twig" %}
+
+{% set title = 'Mon compte' %}
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-danger mt-3" role="alert">
+            {{ error[0].msg }}
+        </div>
+    {% endif %}
+
+    <div class="ui middle aligned center aligned auth grid">
+        <div class="card mt-3 mb-3">
+            <h4 class="card-header">
+                <i class="user icon"></i>Modification
+            </h4>
+            <div class="card-body">
+                <form class="ui large form" action="update" method="POST">
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-firstname"><i class="fa fa-user"></i></span>
+                        <input type="text" class="form-control" name="first_name" placeholder="Prénom" value="{{ (query | length) != 0 ? query.first_name : user.first_name }}" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-lastname"><i class="fa fa-user"></i></span>
+                        <input type="text" class="form-control" name="last_name" placeholder="Nom" value="{{ (query | length) != 0 ? query.last_name : user.last_name }}" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-email"><i class="fa fa-envelope"></i></span>
+                        <input type="email" class="form-control" name="email" placeholder="Email" value="{{ (query | length) != 0 ? query.email : user.email }}" required>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary" value="Valider">
+                    <a class="btn btn-secondary" href="account">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

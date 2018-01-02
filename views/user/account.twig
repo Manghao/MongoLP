@@ -1,0 +1,36 @@
+{% extends "template/layout.twig" %}
+
+{% set title = 'Mon compte' %}
+
+{% block content %}
+    {% if success %}
+        <div class="alert alert-success mt-3" role="alert">
+            {{ success[0].msg }}
+        </div>
+    {% endif %}
+
+    <div class="ui middle aligned center aligned auth grid">
+        <div class="card mt-3 mb-3">
+            <h4 class="card-header">
+                <i class="user icon"></i>Mon compte
+            </h4>
+            <div class="card-body">
+                <div class="mb-3 input-group">
+                    <span class="input-group-addon" id="addon-firstname"><i class="fa fa-user"></i></span>
+                    <input type="text" class="form-control" name="first_name" placeholder="Prénom" value="{{ user.first_name }}" readonly disabled>
+                </div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-addon" id="addon-lastname"><i class="fa fa-user"></i></span>
+                    <input type="text" class="form-control" name="last_name" placeholder="Nom" value="{{ user.last_name }}" readonly disabled>
+                </div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-addon" id="addon-email"><i class="fa fa-envelope"></i></span>
+                    <input type="email" class="form-control" name="email" placeholder="Email" value="{{ user.email }}" readonly disabled>
+                </div>
+
+                <a class="btn btn-primary" href="edit">Modifier</a>
+                <a class="btn btn-primary float-right" href="editPwd">Changer de mot de passe</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

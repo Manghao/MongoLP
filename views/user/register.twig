@@ -5,7 +5,7 @@
 {% block content %}
     {% if error %}
         <div class="alert alert-danger mt-3" role="alert">
-            {{ error }}
+            {{ error[0].msg }}
         </div>
     {% endif %}
 
@@ -18,15 +18,15 @@
                 <form class="ui large form" action="createAccount" method="POST">
                     <div class="mb-3 input-group">
                         <span class="input-group-addon" id="addon-firstname"><i class="fa fa-user"></i></span>
-                        <input type="text" class="form-control" name="first_name" placeholder="Prénom" required>
+                        <input type="text" class="form-control" name="first_name" placeholder="Prénom" value="{{ query.first_name }}" required>
                     </div>
                     <div class="mb-3 input-group">
                         <span class="input-group-addon" id="addon-lastname"><i class="fa fa-user"></i></span>
-                        <input type="text" class="form-control" name="last_name" placeholder="Nom" required>
+                        <input type="text" class="form-control" name="last_name" placeholder="Nom" value="{{ query.last_name }}" required>
                     </div>
                     <div class="mb-3 input-group">
                         <span class="input-group-addon" id="addon-email"><i class="fa fa-envelope"></i></span>
-                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                        <input type="email" class="form-control" name="email" placeholder="Email" value="{{ query.email }}" required>
                     </div>
                     <div class="mb-3 input-group">
                         <span class="input-group-addon" id="addon-pwd"><i class="fa fa-key"></i></span>

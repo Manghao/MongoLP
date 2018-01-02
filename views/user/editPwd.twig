@@ -1,0 +1,38 @@
+{% extends "template/layout.twig" %}
+
+{% set title = 'Mon compte' %}
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-danger mt-3" role="alert">
+            {{ error[0].msg }}
+        </div>
+    {% endif %}
+
+    <div class="ui middle aligned center aligned auth grid">
+        <div class="card mt-3 mb-3">
+            <h4 class="card-header">
+                <i class="user icon"></i>Modification du mot de passe
+            </h4>
+            <div class="card-body">
+                <form class="ui large form" action="updatePwd" method="POST">
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-pwd-old"><i class="fa fa-key"></i></span>
+                        <input type="password" class="form-control" name="password_old" placeholder="Ancien mot de passe" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-pwd-new"><i class="fa fa-key"></i></span>
+                        <input type="password" class="form-control" name="password_new" placeholder="Nouveau mot de passe" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-addon" id="addon-pwd-confirm"><i class="fa fa-key"></i></span>
+                        <input type="password" class="form-control" name="password_confirm" placeholder="Confirmation nouveau mot de passe" required>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary" value="Valider">
+                    <a class="btn btn-secondary" href="account">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -13,11 +13,16 @@
 				<a class="nav-link" href="map">Carte <span class="sr-only">(current)</span></a>
 			</li>
 			<li class="nav-item active">
-				<a class="nav-link" href="#">Contact <span class="sr-only">(current)</span></a>
+				<a class="nav-link" href="events">Evénements <span class="sr-only">(current)</span></a>
 			</li>
 		</ul>
 
-		<a class="btn btn-sm btn-light mr-2" href="register">Inscription</a>
-		<a class="btn btn-sm btn-light" href="login">Connexion</a>
+		{% if auth %}
+			<a class="btn btn-sm btn-light mr-2" href="account">Mon compte</a>
+			<a class="btn btn-sm btn-danger" href="logout">Déconnexion</a>
+		{% else %}
+			<a class="btn btn-sm btn-light mr-2" href="register">Inscription</a>
+			<a class="btn btn-sm btn-success" href="login">Connexion</a>
+		{% endif %}
 	</div>
 </nav>

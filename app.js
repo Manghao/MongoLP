@@ -34,7 +34,11 @@ app.get('/',(req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    UserController.register(req, res);
+    if (!req.session.user) {
+        UserController.register(req, res);
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.post('/createAccount', (req, res) => {
@@ -42,11 +46,55 @@ app.post('/createAccount', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    UserController.login(req, res);
+    if (!req.session.user) {
+        UserController.login(req, res);
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.post('/validLogin', (req, res) => {
     UserController.validLogin(req, res);
+});
+
+app.get('/logout', (req, res) => {
+    if (req.session.user) {
+        UserController.logout(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/account', (req, res) => {
+    if (req.session.user) {
+        UserController.getAccount(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/edit', (req, res) => {
+    if (req.session.user) {
+        UserController.editAccount(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/update', (req, res) => {
+    UserController.update(req, res);
+});
+
+app.get('/editPwd', (req, res) => {
+    if (req.session.user) {
+        UserController.editPwd(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/updatePwd', (req, res) => {
+    UserController.updatePwd(req, res);
 });
 
 app.get('/map',(req, res) => {

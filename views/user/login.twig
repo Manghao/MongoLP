@@ -3,9 +3,15 @@
 {% set title = 'Connexion' %}
 
 {% block content %}
+    {% if success %}
+        <div class="alert alert-success mt-3" role="alert">
+            {{ success[0].msg }}
+        </div>
+    {% endif %}
+
     {% if error %}
         <div class="alert alert-danger mt-3" role="alert">
-            {{ error }}
+            {{ error[0].msg }}
         </div>
     {% endif %}
 
@@ -18,7 +24,7 @@
                 <form class="ui large form" action="validLogin" method="POST">
                     <div class="mb-3 input-group">
                         <span class="input-group-addon" id="addon-email"><i class="fa fa-envelope"></i></span>
-                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                        <input type="email" class="form-control" name="email" placeholder="Email" value="{{ query.email }}" required>
                     </div>
                     <div class="mb-3 input-group">
                         <span class="input-group-addon" id="addon-pwd"><i class="fa fa-key"></i></span>
