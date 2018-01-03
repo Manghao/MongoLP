@@ -137,9 +137,10 @@ refreshCollection = () => {
                 let event = new Event({
                     nom: attributes['NOM'],
                     capacite: attributes['CAPACITE'],
-                    places_disponibles: attributes['PLACES'],
+                    places_disponibles: (attributes['PLACES'] == null ? '/' : attributes['PLACES']),
                     id_rue: attributes['ID'],
                     adresse: attributes['ADRESSE'],
+                    statut: (attributes['PLACES'] == null ? 'Fermé' : 'Ouvert'),
                     lat: geometry['y'],
                     lng: geometry['x'],
                     type: 'parkingsVoitures'
@@ -190,6 +191,7 @@ refreshCollection = () => {
                                     places_disponibles: one.details['free'],
                                     id_rue: one['number'],
                                     adresse: one['address'],
+                                    statut: (one['open'] === 0 ? 'Fermé' : 'Ouvert'),
                                     lat: one['lat'],
                                     lng: one['lng'],
                                     type: 'stationsVeloStan'
