@@ -1,0 +1,25 @@
+{% extends "template/layout.twig" %}
+
+{% set title = 'Evénements' %}
+
+{% block content %}
+	<div class="card mt-3">
+		<h4 class="card-header">
+			<i class="user icon"></i>Evénements
+		</h4>
+		<div class="card-body">
+			<div class="row">
+                {% for key, event in events %}
+					<div id="event-{{ key + 1 }}" class="card col-3 p-0 ml-5 mr-4 mb-5">
+						<h5 class="card-header">
+							<i class="user icon"></i>{{ event.nom }}
+						</h5>
+						<div class="card-body">
+                            Type: {{ event.type }}
+						</div>
+					</div>
+                {% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
