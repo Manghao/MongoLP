@@ -71,6 +71,7 @@ exports.createAccount = (req, res) => {
 };
 
 exports.login = (req, res) => {
+    console.log(req.flash().error);
     res.render('user/login.twig', { query: req.query, success: req.flash().success, error: req.flash().error });
 };
 

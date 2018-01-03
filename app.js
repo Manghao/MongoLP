@@ -11,8 +11,10 @@ let flash = require('connect-flash');
 
 const bodyParser = require('body-parser');
 const config = require('./config/config');
+const Event = require('./models/Event');
 const AppController = require('./controllers/AppController');
 const UserController = require('./controllers/UserController');
+const EventController = require('./controllers/EventController');
 
 mongoose.connect('mongodb://' + config.getConfig(), {
     useMongoClient: true,
@@ -41,7 +43,7 @@ app.get('/register', (req, res) => {
     }
 });
 
-app.post('/createAccount', (req, res) => {
+app.post('/createaccount', (req, res) => {
     UserController.createAccount(req, res);
 });
 
@@ -53,7 +55,7 @@ app.get('/login', (req, res) => {
     }
 });
 
-app.post('/validLogin', (req, res) => {
+app.post('/validlogin', (req, res) => {
     UserController.validLogin(req, res);
 });
 
@@ -85,7 +87,7 @@ app.post('/update', (req, res) => {
     UserController.update(req, res);
 });
 
-app.get('/editPwd', (req, res) => {
+app.get('/editpwd', (req, res) => {
     if (req.session.user) {
         UserController.editPwd(req, res);
     } else {
@@ -93,8 +95,12 @@ app.get('/editPwd', (req, res) => {
     }
 });
 
-app.post('/updatePwd', (req, res) => {
+app.post('/updatepwd', (req, res) => {
     UserController.updatePwd(req, res);
+});
+
+app.get('/events', (req, res) => {
+    EventController.getEvents(req, res);
 });
 
 app.get('/map',(req, res) => {
@@ -113,7 +119,9 @@ app.get('/parkings', (req, res) => {
 refreshCollection = () => {
     console.log('\t- Reloading database');
 
+    db.collection("events").remove({});
     db.collection("parkingsVoitures").remove({});
+    db.collection("stationsVeloStan").remove({});
 
     https.get('https://geoservices.grand-nancy.org/arcgis/rest/services/public/VOIRIE_Parking/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=pjson', (result) => {
         let body = '';
@@ -123,20 +131,35 @@ refreshCollection = () => {
 		.on('end', () => {
             let parkings = JSON.parse(body).features;
             for (let i = 0; i < parkings.length; i++) {
+                let attributes = parkings[i].attributes;
+                let geometry = parkings[i].geometry;
+
+                let event = new Event({
+                    nom: attributes['NOM'],
+                    capacite: attributes['CAPACITE'],
+                    places_disponibles: (attributes['PLACES'] == null ? '/' : attributes['PLACES']),
+                    id_rue: attributes['ID'],
+                    adresse: attributes['ADRESSE'],
+                    statut: (attributes['PLACES'] == null ? 'Fermé' : 'Ouvert'),
+                    lat: geometry['y'],
+                    lng: geometry['x'],
+                    type: 'parkingsVoitures'
+                });
+                event.save();
+
                 let park = {};
-                for(let key in parkings[i].attributes) {
-                    park[key.toLowerCase()] = parkings[i].attributes[key];
+                for(let key in attributes) {
+                    park[key.toLowerCase()] = attributes[key];
                 }
-                park['geometry'] = parkings[i].geometry;
+                park['geometry'] = geometry;
                 db.collection('parkingsVoitures').insert(park);
+
             }
         })
         .on('error', (e) => {
             console.log('Error : ' + e.message);
         });
     });
-
-    db.collection("stationsVeloStan").remove({});
 
     http.get('http://www.velostanlib.fr/service/carto', (result) => {
         let body = '';
@@ -161,6 +184,19 @@ refreshCollection = () => {
                             parser.parseString(body, (errParser, resultParser) => {
                                 one.details = resultParser.station;
                                 db.collection('stationsVeloStan').insert(one);
+
+                                let event = new Event({
+                                    nom: one['name'],
+                                    capacite: one.details['total'],
+                                    places_disponibles: one.details['free'],
+                                    id_rue: one['number'],
+                                    adresse: one['address'],
+                                    statut: (one['open'] === 0 ? 'Fermé' : 'Ouvert'),
+                                    lat: one['lat'],
+                                    lng: one['lng'],
+                                    type: 'stationsVeloStan'
+                                });
+                                event.save();
                             });
                         })
                         .on('error', (e) => {

@@ -1,0 +1,51 @@
+{% extends "template/layout.twig" %}
+
+{% set title = 'Evénements' %}
+
+{% block content %}
+	<div class="card mt-3 mb-3">
+		<h4 class="card-header">
+			<i class="user icon"></i>Evénements
+		</h4>
+		<div class="card-body">
+			<div class="row">
+                {% for key, event in events %}
+					<div id="event-{{ key + 1 }}" class="card col-3 p-0 ml-5 mr-4 mb-5">
+						<h5 class="card-header">
+							<i class="user icon"></i>{{ event.nom }}
+						</h5>
+						<div class="card-body">
+							<p class="card-text"><strong>Adresse:</strong> {{ event.id_rue }} {{ event.adresse }}</p>
+							<p class="card-text"><strong>Capacité:</strong> {{ event.capacite }}</p>
+							<p class="card-text"><strong>Places disponibles:</strong> {{ event.places_disponibles }}</p>
+							{% if event.statut == 'Ouvert' %}
+								<p class="card-text"><strong>Statut:</strong> <span class="text-success">{{ event.statut }}</span></p>
+							{% else %}
+								<p class="card-text"><strong>Statut:</strong> <span class="text-danger">{{ event.statut }}</span></p>
+							{% endif %}
+							<p class="card-text"><strong>Type:</strong> {{ event.type }}</p>
+						</div>
+					</div>
+                {% endfor %}
+			</div>
+
+			<nav aria-label="...">
+				<ul class="pagination justify-content-center m-0">
+					<li class="page-item">
+						<a class="page-link" href="?page={{ (currentPage - 1) < 0 ? currentPage : (currentPage - 1) }}" tabindex="-1">&laquo;</a>
+					</li>
+                    {% for i in 1..totalPages %}
+						{% if i == currentPage %}
+							<li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+						{% else %}
+							<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+						{% endif %}
+                    {% endfor %}
+					<li class="page-item">
+						<a class="page-link" href="?page={{ (currentPage + 1) > totalPages ? currentPage : (currentPage + 1) }}">&raquo;</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+{% endblock %}
