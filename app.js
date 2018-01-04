@@ -94,7 +94,7 @@ app.get('/editpwd', (req, res) => {
     if (req.session.user) {
         UserController.editPwd(req, res);
     } else {
-        res.redirect('/');
+        res.redirect('/login');
     }
 });
 
@@ -118,16 +118,24 @@ app.get('/events/:idEvent/deletecomment/:idComment', (req, res) => {
     if (req.session.user) {
         EventController.deleteComment(req, res);
     } else {
-        res.redirect('/');
+        res.redirect('/login');
     }
 });
 
 app.get('/events/create', (req, res) => {
-    EventController.createEvent(req, res);
+	if (req.session.user) {
+    	EventController.createEvent(req, res);
+    } else {
+    	res.redirect('/login');
+    }
 });
 
 app.post('/events/store', (req, res) => {
-    EventController.storeEvent(req, res);
+	if (req.session.user) {
+    	EventController.storeEvent(req, res);
+    } else {
+    	res.redirect('/');
+    }
 });
 
 app.get('/map',(req, res) => {
