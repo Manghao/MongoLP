@@ -6,3 +6,8 @@
 input[type="submit"], button {
 	cursor: pointer;
 }
+
+#output a {
+	display: block;
+	width: 100%;
+}
