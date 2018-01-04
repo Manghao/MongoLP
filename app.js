@@ -103,6 +103,10 @@ app.get('/events', (req, res) => {
     EventController.getEvents(req, res);
 });
 
+app.get('/events/:id', (req, res) => {
+    EventController.getOneEvent(req, res);
+});
+
 app.get('/map',(req, res) => {
     refreshCollection();
     AppController.getMap(req, res);
