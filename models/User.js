@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    type_user: String
 }, { timestamps: true });
 
 userSchema.pre('save', function save(next) {

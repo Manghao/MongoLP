@@ -107,6 +107,18 @@ app.get('/events/:id', (req, res) => {
     EventController.getOneEvent(req, res);
 });
 
+app.post('/events/:id/addcomment', (req, res) => {
+    EventController.addComment(req, res);
+});
+
+app.get('/events/:idEvent/deletecomment/:idComment', (req, res) => {
+    if (req.session.user) {
+        EventController.deleteComment(req, res);
+    } else {
+        res.redirect('/');
+    }
+});
+
 app.get('/map',(req, res) => {
     refreshCollection();
     AppController.getMap(req, res);
@@ -124,6 +136,7 @@ refreshCollection = () => {
     console.log('\t- Reloading database');
 
     db.collection("events").remove({});
+    db.collection("comments").remove({});
     db.collection("parkingsVoitures").remove({});
     db.collection("stationsVeloStan").remove({});
 

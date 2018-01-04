@@ -1,20 +1,69 @@
 {% extends "template/layout.twig" %}
 
-{% set title = {{ event.nom }} %}
+{% set title = event.nom %}
 
 {% block content %}
-	<a class="btn btn-secondary mt-3" href="/events">&larr; Retour aux événements</a>
+    {% if success %}
+        <div class="alert alert-success mt-3" role="alert">
+            {{ success[0].msg }}
+        </div>
+    {% endif %}
 
-	<div class="card mt-3 mb-3">
-		<h4 class="card-header">
-			<i class="user icon"></i>{{ event.nom }}
-		</h4>
-		<div class="card-body">
-			<p class="card-text"><strong>Adresse:</strong> {{ event.id_rue }} {{ event.adresse }}</p>
-			<p class="card-text"><strong>Capacité:</strong> {{ event.capacite }}</p>
-			<p class="card-text"><strong>Places disponibles:</strong> {% if event.statut == 'Ouvert' %}{{ event.places_disponibles }}{% else %}NC{% endif %}</p>
+    <a class="btn btn-secondary mt-3" href="/events"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+        Retour aux événements</a>
+
+    <div class="card mt-3 mb-3">
+        <h4 class="card-header">
+            <i class="user icon"></i>{{ event.nom }}
+        </h4>
+        <div class="card-body">
+            <p class="card-text"><strong>Adresse:</strong> {{ event.id_rue }} {{ event.adresse }}</p>
+            <p class="card-text"><strong>Capacité:</strong> {{ event.capacite }}</p>
+            <p class="card-text"><strong>Places disponibles:</strong> {% if event.statut == 'Ouvert' %}{{ event.places_disponibles }}{% else %}NC{% endif %}</p>
             <p class="card-text"><strong>Statut:</strong> <span class="{% if event.statut == 'Ouvert' %}text-success{% else %}text-danger{% endif %}">{{ event.statut }}</span></p>
-			<p class="card-text"><strong>Type:</strong> {{ event.type }}</p>
-		</div>
-	</div>
+            <p class="card-text"><strong>Type:</strong> {{ event.type }}</p>
+        </div>
+    </div>
+
+    <div id="comment_area" class="card mb-3">
+        <h4 class="card-header">
+            <i class="user icon"></i>Commentaires
+        </h4>
+        <div class="card-body">
+            {% if comments.length > 0 %}
+                {% for i in comments.length..1 %}
+                    <div id="comment-{{ i }}">
+                        {% if auth %}
+                            {% if auth.id == comments[i - 1].id_creator or auth.type_user == 'admin' %}
+                                <a class="fa fa-times float-right text-dark" href="{{ event.id }}/deletecomment/{{ comments[i - 1].id }}"></a>
+                            {% endif %}
+                        {% endif %}
+                        <p><strong>Par {{ comments[i - 1].name }}</strong> <small><i> le {{ comments[i - 1].createdAt }}</i></small></p>
+                        <span>{{ comments[i - 1].comment }}</span>
+                        <hr />
+                    </div>
+                {% endfor %}
+            {% else %}
+                <span>Pas de commentaires.</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if auth %}
+        <div id="add_comment_area" class="card mb-3">
+            <h4 class="card-header">
+                <i class="user icon"></i>Ajouter un commentaire
+            </h4>
+            <div class="card-body">
+
+
+                <form class="ui large form" action="{{ event.id }}/addcomment" method="POST">
+                    <div class="input-group">
+                        <input type="text" class="form-control mr-2" name="comment" placeholder="Votre commentaire" required>
+                        <input type="submit" class="btn btn-primary" value="Valider">
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
