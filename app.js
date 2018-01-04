@@ -10,11 +10,11 @@ let session = require('express-session');
 let flash = require('connect-flash');
 
 const bodyParser = require('body-parser');
-const config = require('./config/config');
-const Event = require('./models/Event');
-const AppController = require('./controllers/AppController');
-const UserController = require('./controllers/UserController');
-const EventController = require('./controllers/EventController');
+const config = require('./app/config/config');
+const Event = require('./app/models/Event');
+const AppController = require('./app/controllers/AppController');
+const UserController = require('./app/controllers/UserController');
+const EventController = require('./app/controllers/EventController');
 
 mongoose.connect('mongodb://' + config.getConfig(), {
     useMongoClient: true,
@@ -23,6 +23,9 @@ mongoose.connect('mongodb://' + config.getConfig(), {
 let db = mongoose.connection;
 
 app.use(express.static(__dirname));
+
+app.set('views', __dirname + '/app/views');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ cookie: { maxAge: 60000 },
