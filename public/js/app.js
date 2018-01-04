@@ -53,11 +53,13 @@ window.VeloNancy = (() => {
     }
 
     module.addStation = (data) => {
+    	let places_libres = $('<p>').text(`Vélos disponibles: ${data.details.free}/${data.details.total}`)[0].outerHTML;
+    	let open = ((data.open == 1) ? $('<p>').addClass('text-success').text('Ouvert') : $('<p>').addClass('text-danger').text('Fermé'))[0].outerHTML;
         L.marker([data.lat, data.lng], {
             icon: this.locationIcon
         })
         .addTo(this.map)
-        .bindPopup(`<h6>${data.name}</h6>${data.fullAddress}`);
+        .bindPopup(`<h6>${data.name}</h6><span>${data.fullAddress}</span>${places_libres}${open}`);
     }
 
     module.addParking = (data) => {
