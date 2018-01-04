@@ -77,3 +77,11 @@ exports.deleteComment = (req, res) => {
         }
     });
 };
+
+exports.createEvent = (req, res) => {
+    res.render('event/create.twig');
+};
+
+exports.storeEvent = (req, res) => {
+    
+};

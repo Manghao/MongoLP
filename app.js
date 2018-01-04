@@ -28,7 +28,7 @@ app.set('views', __dirname + '/app/views');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ cookie: { maxAge: 60000 },
+app.use(session({ cookie: { maxAge: 7200000 },
     secret: 'woot',
     resave: false,
     saveUninitialized: false}));
@@ -94,7 +94,7 @@ app.get('/editpwd', (req, res) => {
     if (req.session.user) {
         UserController.editPwd(req, res);
     } else {
-        res.redirect('/');
+        res.redirect('/login');
     }
 });
 
@@ -118,7 +118,23 @@ app.get('/events/:idEvent/deletecomment/:idComment', (req, res) => {
     if (req.session.user) {
         EventController.deleteComment(req, res);
     } else {
-        res.redirect('/');
+        res.redirect('/login');
+    }
+});
+
+app.get('/events/create', (req, res) => {
+	if (req.session.user) {
+    	EventController.createEvent(req, res);
+    } else {
+    	res.redirect('/login');
+    }
+});
+
+app.post('/events/store', (req, res) => {
+	if (req.session.user) {
+    	EventController.storeEvent(req, res);
+    } else {
+    	res.redirect('/');
     }
 });
 
