@@ -3,7 +3,7 @@ exports.getHome = (req, res) => {
 };
 
 exports.getMap = (req, res) => {
-    res.render('map/map.twig');
+    res.render('map/map.twig', { auth: req.session.user });
 };
 
 exports.getStations = (db, req, res) => {

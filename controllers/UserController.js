@@ -23,7 +23,8 @@ exports.createAccount = (req, res) => {
                         first_name: firstName,
                         last_name: lastName,
                         email: email,
-                        password: password
+                        password: password,
+                        type_user: 'user'
                     });
 
                     return User.findOne({ email: email }, (err, existingUser) => {
@@ -71,8 +72,8 @@ exports.createAccount = (req, res) => {
 };
 
 exports.login = (req, res) => {
-    console.log(req.flash().error);
-    res.render('user/login.twig', { query: req.query, success: req.flash().success, error: req.flash().error });
+    let flash = req.flash();
+    res.render('user/login.twig', { query: req.query, success: flash.success, error: flash.error });
 };
 
 exports.validLogin = (req, res) => {
@@ -83,7 +84,7 @@ exports.validLogin = (req, res) => {
         User.findOne({ email: email }, (err, existingUser) => {
             if (existingUser) {
                 if (existingUser.comparePassword(password)) {
-                    req.session.user = { "first_name": existingUser.first_name, "last_name": existingUser.last_name, "email": existingUser.email };
+                    req.session.user = { "id": existingUser.id, "first_name": existingUser.first_name, "last_name": existingUser.last_name, "email": existingUser.email, "type_user": existingUser.type_user };
                     req.flash('success', { 'msg': 'Vous êtes maintenant connecté !' });
                     return res.redirect('/');
                 } else {
