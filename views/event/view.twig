@@ -3,7 +3,7 @@
 {% set title = {{ event.nom }} %}
 
 {% block content %}
-	<a class="btn btn-secondary mt-3" href="/events"><-- Retour aux événements</a>
+	<a class="btn btn-secondary mt-3" href="/events">&larr; Retour aux événements</a>
 
 	<div class="card mt-3 mb-3">
 		<h4 class="card-header">
@@ -12,12 +12,8 @@
 		<div class="card-body">
 			<p class="card-text"><strong>Adresse:</strong> {{ event.id_rue }} {{ event.adresse }}</p>
 			<p class="card-text"><strong>Capacité:</strong> {{ event.capacite }}</p>
-			<p class="card-text"><strong>Places disponibles:</strong> {{ event.places_disponibles }}</p>
-            {% if event.statut == 'Ouvert' %}
-				<p class="card-text"><strong>Statut:</strong> <span class="text-success">{{ event.statut }}</span></p>
-            {% else %}
-				<p class="card-text"><strong>Statut:</strong> <span class="text-danger">{{ event.statut }}</span></p>
-            {% endif %}
+			<p class="card-text"><strong>Places disponibles:</strong> {% if event.statut == 'Ouvert' %}{{ event.places_disponibles }}{% else %}NC{% endif %}</p>
+            <p class="card-text"><strong>Statut:</strong> <span class="{% if event.statut == 'Ouvert' %}text-success{% else %}text-danger{% endif %}">{{ event.statut }}</span></p>
 			<p class="card-text"><strong>Type:</strong> {{ event.type }}</p>
 		</div>
 	</div>
