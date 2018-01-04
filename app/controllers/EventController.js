@@ -1,9 +1,13 @@
+const config = require('../config/config');
 const Event = require('../models/Event');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
 const limit = 9;
 
+let validator = require('validator');
 let xss = require('xss');
+let url = require('url');
+let NodeGeocoder = require('node-geocoder');
 
 exports.getEvents = (req, res) => {
     let totalPages = 0;
@@ -79,9 +83,116 @@ exports.deleteComment = (req, res) => {
 };
 
 exports.createEvent = (req, res) => {
-    res.render('event/create.twig');
+    let flash = req.flash();
+    res.render('event/create.twig', { query: req.query, success: flash.success, error: flash.error });
 };
 
 exports.storeEvent = (req, res) => {
-    
+    let name = xss(req.body.name);
+    let capacity = req.body.capacity;
+    let free = req.body.free;
+    let street_num = xss(req.body.street_num);
+    let street = xss(req.body.street);
+    let city = xss(req.body.city);
+    let code = xss(req.body.code);
+    let statut = xss(req.body.statut);
+    let type = xss(req.body.type);
+
+    let errors = false;
+
+    if (capacity != '' || free != '') {
+        if (parseInt(free) > parseInt(capacity)) {
+            errors = true;
+            req.flash('error', { 'msg': 'Le nombre de places disponibles ne peut être suprérieur à la capacité !' });
+        }
+    }
+
+    if (name != '') {
+        if (city != '') {
+            if (street != '') {
+                if (validator.isInt(code)) {
+                    if (validator.isInt(street_num)) {
+                        let options = {
+                            provider: 'opencage',
+                            
+                            httpAdapter: 'https',
+                            apiKey: config.getApiKey(),
+                            formatter: null
+                        };
+                        let geocoder = NodeGeocoder(options);
+                        console.log(street_num + " " + street + " " + city)
+                        geocoder.geocode({address: street_num + " " + street + " " + city, country: 'France', zipcode: code}, function(err, result) {
+                            if (err) throw err;
+
+                            if (result.length > 1) {
+                                let event = new Event({
+                                    nom: name,
+                                    capacite: (capacity == '') ? 0 : capacity,
+                                    places_disponibles: (free == '') ? 0 : free,
+                                    id_rue: street_num,
+                                    adresse: street + " - " + city + ", " + code,
+                                    statut: statut,
+                                    lat: result[0].latitude,
+                                    lng: result[0].longitude,
+                                    type: type
+                                });
+
+                                event.save();
+
+                                return res.redirect('/events/' + event._id);
+                            } else {
+                                req.flash('error', { 'msg': "Veuillez vérifier que l'adresse soit valide !" });
+                                return res.redirect(url.format({
+                                    pathname: '/event/create',
+                                    query: {
+                                        name: name,
+                                        capacity: capacity,
+                                        free: free,
+                                        street_num: street_num,
+                                        street: street,
+                                        city: city,
+                                        code: code,
+                                        statut: statut,
+                                        type: type
+                                    }
+                                }));
+                            }
+                        });
+                    } else {
+                        errors = true;
+                        req.flash('error', { 'msg': 'Le numéro de rue rentré est incorrect !' });
+                    }
+                } else {
+                    errors = true;
+                    req.flash('error', { 'msg': 'Le code postal rentré est incorrect !' });
+                }
+            } else {
+                errors = true;
+                req.flash('error', { 'msg': 'Le nom de rue rentré est incorrect !' });
+            }
+        } else{
+            errors = true;
+            req.flash('error', { 'msg': 'La ville rentrée est incorrect !' });
+        }
+    } else {
+        errors = true;
+        req.flash('error', { 'msg': 'Le nom rentré est incorrect !' });
+    }
+
+    if (errors) {
+        res.redirect(url.format({
+            pathname: '/event/create',
+            query: {
+                name: name,
+                capacity: capacity,
+                free: free,
+                street_num: street_num,
+                street: street,
+                city: city,
+                code: code,
+                statut: statut,
+                type: type
+            }
+        }));
+    }
 };

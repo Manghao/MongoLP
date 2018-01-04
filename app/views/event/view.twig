@@ -12,6 +12,10 @@
     <a class="btn btn-secondary mt-3" href="/events"><i class="fa fa-arrow-left" aria-hidden="true"></i>
         Retour aux événements</a>
 
+    {% if auth %}
+        <a class="btn btn-secondary mt-3" href="/event/create"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter un événement</a>
+    {% endif %}
+
     <div class="card mt-3 mb-3">
         <h4 class="card-header">
             <i class="user icon"></i>{{ event.nom }}

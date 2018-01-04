@@ -8,26 +8,94 @@
 {% endblock %}
 
 {% block content %}
+	{% if success %}
+        <div class="alert alert-success mt-3" role="alert">
+            {{ success[0].msg }}
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="alert alert-danger mt-3" role="alert">
+            {{ error[0].msg }}
+        </div>
+    {% endif %}
+
     <div class="card mt-3">
 		<h4 class="card-header">
 			<i class="user icon"></i>Ajouter un événement
 		</h4>
 		<div class="card-body">
-			<form method="post" action="events/store">
-				<div class="row">
+			<form class="ui large form" action="/event/store" method="POST">
+				<div class="mb-3 form-group">
+					<div class="input-group">
+						<span class="input-group-addon" id="addon-name"><i class="fa fa-address-card" aria-hidden="true"></i></span>
+						<input type="text" id="name" name="name" value="{{ query.name }}" placeholder="Nom de l'événement" class="form-control" autocomplete="off" required="">
+					</div>
+				</div>
+				<div class="mb-3 form-group row">
 					<div class="col-md-6">
 						<div class="input-group">
-							<input id="code" name="code" placeholder="Code postal" class="form-control" autocomplete="off" autofocus required="">
+							<span class="input-group-addon" id="addon-capacity"><i class="fa fa-list-ol" aria-hidden="true"></i></span>
+							<input type="number" min="0" id="capacity" name="capacity" value="{{ query.capacity }}" placeholder="Capacité" class="form-control" autocomplete="off">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="input-group">
-							<input id="city" name="city" placeholder="Ville" class="form-control" autocomplete="off" required="">
+							<span class="input-group-addon" id="addon-free"><i class="fa fa-list-ol" aria-hidden="true"></i></span>
+							<input type="number" min="0" id="free" name="free" value="{{ query.free }}" placeholder="Places disponibles" class="form-control" autocomplete="off">	
 						</div>
 					</div>
-					<input type="submit" class="btn btn-primary col-md-12" value="Valider">
+				</div>
+				<div class="mb-3 form-group">
+					<div class="input-group">
+						<span class="input-group-addon" id="addon-street_num"><i class="fa fa-road" aria-hidden="true"></i></span>
+						<input type="number" min="0" id="street_num" name="street_num" value="{{ query.street_num }}" placeholder="Numéro de rue" class="form-control" autocomplete="off" required="">
+					</div>
+				</div>
+				<div class="mb-3 form-group">
+					<div class="input-group">
+						<span class="input-group-addon" id="addon-street"><i class="fa fa-road" aria-hidden="true"></i></span>
+						<input type="text" min="0" id="street" name="street" value="{{ query.street }}" placeholder="Nom de la rue" class="form-control" autocomplete="off" required="">
+					</div>
+				</div>
+				<div class="mb-3 form-group row">
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon" id="addon-type"><i class="fa fa-th-list" aria-hidden="true"></i></span>
+							<select class="form-control" id="type" name="type">
+								<option value="" disabled selected>Choisissez le type</option>
+								<option value="parkingsVoitures">parkingsVoitures</option>
+								<option value="stationsVeloStan">stationsVeloStan</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon" id="addon-statut"><i class="fa fa-th-list" aria-hidden="true"></i></span>
+							<select class="form-control" id="statut" name="statut">
+								<option value="" disabled selected>Choisissez le statut</option>
+								<option value="open">Ouvert</option>
+								<option value="close">Fermé</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="mb-3 form-group row">
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon" id="addon-city"><i class="fa fa-street-view" aria-hidden="true"></i></span>
+							<input type="text" id="city" name="city" value="{{ query.city }}" placeholder="Ville" class="form-control" autocomplete="off" required="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon" id="addon-code"><i class="fa fa-street-view" aria-hidden="true"></i></span>
+							<input type="number" id="code" name="code" value="{{ query.code }}" placeholder="Code postal" class="form-control" autocomplete="off" autofocus required="">	
+						</div>
+					</div>
 				</div>
 				<div id="output"></div>
+				<input type="submit" class="btn btn-primary" value="Valider">
 			</form>
 		</div>
 	</div>

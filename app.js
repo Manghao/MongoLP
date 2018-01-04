@@ -17,8 +17,8 @@ const UserController = require('./app/controllers/UserController');
 const EventController = require('./app/controllers/EventController');
 
 mongoose.connect('mongodb://' + config.getConfig(), {
-    useMongoClient: true,
-    promiseLibrary: global.Promise
+	useMongoClient: true,
+	promiseLibrary: global.Promise
 });
 let db = mongoose.connection;
 
@@ -29,226 +29,242 @@ app.set('views', __dirname + '/app/views');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ cookie: { maxAge: 7200000 },
-    secret: 'woot',
-    resave: false,
-    saveUninitialized: false}));
+	secret: 'woot',
+	resave: false,
+	saveUninitialized: false}));
 app.use(flash());
 
 app.get('/',(req, res) => {
-    AppController.getHome(req, res);
+	AppController.getHome(req, res);
 });
 
 app.get('/register', (req, res) => {
-    if (!req.session.user) {
-        UserController.register(req, res);
-    } else {
-        res.redirect('/');
-    }
+	if (!req.session.user) {
+		UserController.register(req, res);
+	} else {
+		res.redirect('/');
+	}
 });
 
 app.post('/createaccount', (req, res) => {
-    UserController.createAccount(req, res);
+	UserController.createAccount(req, res);
 });
 
 app.get('/login', (req, res) => {
-    if (!req.session.user) {
-        UserController.login(req, res);
-    } else {
-        res.redirect('/');
-    }
+	if (!req.session.user) {
+		UserController.login(req, res);
+	} else {
+		res.redirect('/');
+	}
 });
 
 app.post('/validlogin', (req, res) => {
-    UserController.validLogin(req, res);
+	UserController.validLogin(req, res);
 });
 
 app.get('/logout', (req, res) => {
-    if (req.session.user) {
-        UserController.logout(req, res);
-    } else {
-        res.redirect('/');
-    }
+	if (req.session.user) {
+		UserController.logout(req, res);
+	} else {
+		res.redirect('/');
+	}
 });
 
 app.get('/account', (req, res) => {
-    if (req.session.user) {
-        UserController.getAccount(req, res);
-    } else {
-        res.redirect('/');
-    }
+	if (req.session.user) {
+		UserController.getAccount(req, res);
+	} else {
+		res.redirect('/');
+	}
 });
 
 app.get('/edit', (req, res) => {
-    if (req.session.user) {
-        UserController.editAccount(req, res);
-    } else {
-        res.redirect('/');
-    }
+	if (req.session.user) {
+		UserController.editAccount(req, res);
+	} else {
+		res.redirect('/');
+	}
 });
 
 app.post('/update', (req, res) => {
-    UserController.update(req, res);
+	UserController.update(req, res);
 });
 
 app.get('/editpwd', (req, res) => {
-    if (req.session.user) {
-        UserController.editPwd(req, res);
-    } else {
-        res.redirect('/login');
-    }
+	if (req.session.user) {
+		UserController.editPwd(req, res);
+	} else {
+		res.redirect('/login');
+	}
 });
 
 app.post('/updatepwd', (req, res) => {
-    UserController.updatePwd(req, res);
+	UserController.updatePwd(req, res);
 });
 
 app.get('/events', (req, res) => {
-    EventController.getEvents(req, res);
+	EventController.getEvents(req, res);
 });
 
 app.get('/events/:id', (req, res) => {
-    EventController.getOneEvent(req, res);
+	EventController.getOneEvent(req, res);
 });
 
 app.post('/events/:id/addcomment', (req, res) => {
-    EventController.addComment(req, res);
+	EventController.addComment(req, res);
 });
 
 app.get('/events/:idEvent/deletecomment/:idComment', (req, res) => {
-    if (req.session.user) {
-        EventController.deleteComment(req, res);
-    } else {
-        res.redirect('/login');
-    }
+	if (req.session.user) {
+		EventController.deleteComment(req, res);
+	} else {
+		res.redirect('/login');
+	}
 });
 
-app.get('/events/create', (req, res) => {
+app.get('/event/create', (req, res) => {
 	if (req.session.user) {
-    	EventController.createEvent(req, res);
-    } else {
-    	res.redirect('/login');
-    }
+		EventController.createEvent(req, res);
+	} else {
+		res.redirect('/login');
+	}
 });
 
-app.post('/events/store', (req, res) => {
+app.post('/event/store', (req, res) => {
 	if (req.session.user) {
-    	EventController.storeEvent(req, res);
-    } else {
-    	res.redirect('/');
-    }
+		EventController.storeEvent(req, res);
+	} else {
+		res.redirect('/login');
+	}
+});
+
+app.get('/test', (req, res) => {
+	let NodeGeocoder = require('node-geocoder');
+	let options = {
+		provider: 'opencage',
+		
+		httpAdapter: 'https',
+		apiKey: config.getApiKey(),
+		formatter: null
+	 };
+	 let geocoder = NodeGeocoder(options);
+
+	 geocoder.geocode({address: "19 rue aristide briand laxou", country: 'France', zipcode: "54520"}, function(err, result) {
+		res.send(result);
+	 });
 });
 
 app.get('/map',(req, res) => {
-    refreshCollection();
-    AppController.getMap(req, res);
+	refreshCollection();
+	AppController.getMap(req, res);
 });
 
 app.get('/stations', (req, res) => {
-    AppController.getStations(db, req, res);
+	AppController.getStations(db, req, res);
 });
 
 app.get('/parkings', (req, res) => {
-    AppController.getParkings(db, req, res);
+	AppController.getParkings(db, req, res);
 });
 
 refreshCollection = () => {
-    console.log('\t- Reloading database');
+	console.log('\t- Reloading database');
 
-    db.collection("events").remove({});
-    db.collection("comments").remove({});
-    db.collection("parkingsVoitures").remove({});
-    db.collection("stationsVeloStan").remove({});
+	db.collection("events").remove({});
+	db.collection("comments").remove({});
+	db.collection("parkingsVoitures").remove({});
+	db.collection("stationsVeloStan").remove({});
 
-    https.get('https://geoservices.grand-nancy.org/arcgis/rest/services/public/VOIRIE_Parking/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=pjson', (result) => {
-        let body = '';
-        result.on('data', (data) => {
-            body += data;
-        })
+	https.get('https://geoservices.grand-nancy.org/arcgis/rest/services/public/VOIRIE_Parking/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=pjson', (result) => {
+		let body = '';
+		result.on('data', (data) => {
+			body += data;
+		})
 		.on('end', () => {
-            let parkings = JSON.parse(body).features;
-            for (let i = 0; i < parkings.length; i++) {
-                let attributes = parkings[i].attributes;
-                let geometry = parkings[i].geometry;
+			let parkings = JSON.parse(body).features;
+			for (let i = 0; i < parkings.length; i++) {
+				let attributes = parkings[i].attributes;
+				let geometry = parkings[i].geometry;
 
-                let event = new Event({
-                    nom: attributes['NOM'],
-                    capacite: attributes['CAPACITE'],
-                    places_disponibles: (attributes['PLACES'] == null ? '/' : attributes['PLACES']),
-                    id_rue: attributes['ID'],
-                    adresse: attributes['ADRESSE'],
-                    statut: (attributes['PLACES'] == null ? 'Fermé' : 'Ouvert'),
-                    lat: geometry['y'],
-                    lng: geometry['x'],
-                    type: 'parkingsVoitures'
-                });
-                event.save();
+				let event = new Event({
+					nom: attributes['NOM'],
+					capacite: attributes['CAPACITE'],
+					places_disponibles: (attributes['PLACES'] == null ? '/' : attributes['PLACES']),
+					id_rue: attributes['ID'],
+					adresse: attributes['ADRESSE'],
+					statut: (attributes['PLACES'] == null ? 'Fermé' : 'Ouvert'),
+					lat: geometry['y'],
+					lng: geometry['x'],
+					type: 'parkingsVoitures'
+				});
+				event.save();
 
-                let park = {};
-                for(let key in attributes) {
-                    park[key.toLowerCase()] = attributes[key];
-                }
-                park['geometry'] = geometry;
-                db.collection('parkingsVoitures').insert(park);
+				let park = {};
+				for(let key in attributes) {
+					park[key.toLowerCase()] = attributes[key];
+				}
+				park['geometry'] = geometry;
+				db.collection('parkingsVoitures').insert(park);
 
-            }
-        })
-        .on('error', (e) => {
-            console.log('Error : ' + e.message);
-        });
-    });
+			}
+		})
+		.on('error', (e) => {
+			console.log('Error : ' + e.message);
+		});
+	});
 
-    http.get('http://www.velostanlib.fr/service/carto', (result) => {
-        let body = '';
-        result.on('data', (data) => {
-            body += data;
-        })
-        .on('end', () => {
-            let parser = new x2j.Parser({ explicitArray : false });
-            parser.parseString(body, (errParser, resultParser) => {
-                let stations = resultParser.carto.markers.marker;
-                stations.forEach((station) => {
-                    let one = station['$'];
-                    one.details = {};
+	http.get('http://www.velostanlib.fr/service/carto', (result) => {
+		let body = '';
+		result.on('data', (data) => {
+			body += data;
+		})
+		.on('end', () => {
+			let parser = new x2j.Parser({ explicitArray : false });
+			parser.parseString(body, (errParser, resultParser) => {
+				let stations = resultParser.carto.markers.marker;
+				stations.forEach((station) => {
+					let one = station['$'];
+					one.details = {};
 
-                    http.get(`http://www.velostanlib.fr/service/stationdetails/nancy/${one.number}`, (result) => {
-                        let body = '';
-                        result.on('data', (data) => {
-                            body += data;
-                        })
-                        .on('end', () => {
-                            let parser = new x2j.Parser({ explicitArray : false });
-                            parser.parseString(body, (errParser, resultParser) => {
-                                one.details = resultParser.station;
-                                db.collection('stationsVeloStan').insert(one);
+					http.get(`http://www.velostanlib.fr/service/stationdetails/nancy/${one.number}`, (result) => {
+						let body = '';
+						result.on('data', (data) => {
+							body += data;
+						})
+						.on('end', () => {
+							let parser = new x2j.Parser({ explicitArray : false });
+							parser.parseString(body, (errParser, resultParser) => {
+								one.details = resultParser.station;
+								db.collection('stationsVeloStan').insert(one);
 
-                                let event = new Event({
-                                    nom: one['name'],
-                                    capacite: one.details['total'],
-                                    places_disponibles: one.details['free'],
-                                    id_rue: one['number'],
-                                    adresse: one['address'],
-                                    statut: (one['open'] === 0 ? 'Fermé' : 'Ouvert'),
-                                    lat: one['lat'],
-                                    lng: one['lng'],
-                                    type: 'stationsVeloStan'
-                                });
-                                event.save();
-                            });
-                        })
-                        .on('error', (e) => {
-                            console.log('Error : ' + e.message);
-                        });
-                    });
-                });
-            });
-        })
-        .on('error', (e) => {
-            console.log('Error : ' + e.message);
-        });
-    });
+								let event = new Event({
+									nom: one['name'],
+									capacite: one.details['total'],
+									places_disponibles: one.details['free'],
+									id_rue: one['number'],
+									adresse: one['address'],
+									statut: (one['open'] === 0 ? 'Fermé' : 'Ouvert'),
+									lat: one['lat'],
+									lng: one['lng'],
+									type: 'stationsVeloStan'
+								});
+								event.save();
+							});
+						})
+						.on('error', (e) => {
+							console.log('Error : ' + e.message);
+						});
+					});
+				});
+			});
+		})
+		.on('error', (e) => {
+			console.log('Error : ' + e.message);
+		});
+	});
 };
 
 app.listen(3000, () => {
-    setInterval(refreshCollection, (5 * 60 * 1000));
-    console.log("listening on port 3000");
+	setInterval(refreshCollection, (5 * 60 * 1000));
+	console.log("listening on port 3000");
 });

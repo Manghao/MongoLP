@@ -22,6 +22,7 @@
     "mongoose": "^4.11.13",
     "mongoose-paginate": "^5.0.3",
     "mustache": "^2.3.0",
+    "node-geocoder": "^3.21.1",
     "twig": "^1.10.5",
     "url": "^0.11.0",
     "validator": "^9.2.0",

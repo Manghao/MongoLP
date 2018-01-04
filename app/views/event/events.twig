@@ -3,10 +3,15 @@
 {% set title = 'Evénements' %}
 
 {% block content %}
+	{% if auth %}
+		<a class="btn btn-secondary mt-3" href="/event/create"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter un événement</a>
+	{% endif %}
+
 	<div class="card mt-3 mb-3">
 		<h4 class="card-header">
 			<i class="user icon"></i>Evénements
 		</h4>
+
 		<div class="card-body">
 			<div class="row">
                 {% for key, event in events %}
