@@ -1,0 +1,34 @@
+{% extends "template/layout.twig" %}
+
+{% set title = 'Ajouter un événement' %}
+
+{% block scripts %}
+	<script src="/node_modules/vicopo/api.min.js"></script>
+    <script src="/public/js/vicopo.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="card mt-3">
+		<h4 class="card-header">
+			<i class="user icon"></i>Ajouter un événement
+		</h4>
+		<div class="card-body">
+			<form method="post" action="events/store">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="input-group">
+							<input id="code" name="code" placeholder="Code postal" class="form-control" autocomplete="off" autofocus required="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<input id="city" name="city" placeholder="Ville" class="form-control" autocomplete="off" required="">
+						</div>
+					</div>
+					<input type="submit" class="btn btn-primary col-md-12" value="Valider">
+				</div>
+				<div id="output"></div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

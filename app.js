@@ -28,7 +28,7 @@ app.set('views', __dirname + '/app/views');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ cookie: { maxAge: 60000 },
+app.use(session({ cookie: { maxAge: 7200000 },
     secret: 'woot',
     resave: false,
     saveUninitialized: false}));
@@ -120,6 +120,14 @@ app.get('/events/:idEvent/deletecomment/:idComment', (req, res) => {
     } else {
         res.redirect('/');
     }
+});
+
+app.get('/events/create', (req, res) => {
+    EventController.createEvent(req, res);
+});
+
+app.post('/events/store', (req, res) => {
+    EventController.storeEvent(req, res);
 });
 
 app.get('/map',(req, res) => {

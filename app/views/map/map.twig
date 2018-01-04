@@ -2,6 +2,15 @@
 
 {% set title = 'Carte' %}
 
+{% block scripts %}
+	<script src="/node_modules/leaflet/dist/leaflet.js"></script>
+    <script src="/public/js/app.js"></script>
+{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="/node_modules/leaflet/dist/leaflet.css">
+{% endblock %}
+
 {% block content %}
     <div class="card mt-3">
 		<h4 class="card-header">
