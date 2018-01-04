@@ -14,3 +14,13 @@ exports.getEvents = (req, res) => {
             });
     });
 };
+
+exports.getOneEvent = (req, res) => {
+    let id = req.params.id;
+
+    Event.findOne({ _id: id }, (err, existingEvent) => {
+        if (existingEvent) {
+            res.render('event/view.twig', { event: existingEvent });
+        }
+    });
+};
