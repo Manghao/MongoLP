@@ -16,6 +16,8 @@ const AppController = require('./app/controllers/AppController');
 const UserController = require('./app/controllers/UserController');
 const EventController = require('./app/controllers/EventController');
 
+let port = process.env.PORT || 8080;
+
 mongoose.connect('mongodb://' + config.getConfig(), {
 	useMongoClient: true,
 	promiseLibrary: global.Promise
@@ -223,7 +225,7 @@ refreshCollection = () => {
 	});
 };
 
-app.listen(3000, () => {
+app.listen(port, () => {
 	setInterval(refreshCollection, (5 * 60 * 1000));
-	console.log("listening on port 3000");
+	console.log("listening on http://localhost:" + port);
 });
