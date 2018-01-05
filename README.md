@@ -18,3 +18,6 @@
 
 ## Demonstration
 - [Voir le site](https://baierwilmouth.herokuapp.com)
+- Compte de test : 
+  - Email : demo@demo.fr
+  - Mot de passe : demo
