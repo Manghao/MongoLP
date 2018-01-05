@@ -139,22 +139,6 @@ app.post('/event/store', (req, res) => {
 	}
 });
 
-app.get('/test', (req, res) => {
-	let NodeGeocoder = require('node-geocoder');
-	let options = {
-		provider: 'opencage',
-		
-		httpAdapter: 'https',
-		apiKey: config.getApiKey(),
-		formatter: null
-	 };
-	 let geocoder = NodeGeocoder(options);
-
-	 geocoder.geocode({address: "19 rue aristide briand laxou", country: 'France', zipcode: "54520"}, function(err, result) {
-		res.send(result);
-	 });
-});
-
 app.get('/map',(req, res) => {
 	refreshCollection();
 	AppController.getMap(req, res);
