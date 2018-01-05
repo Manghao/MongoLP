@@ -1,6 +1,6 @@
 window.VeloNancy = (() => {
     let module = {};
-    let map, parkingIcon, locationIcon;
+    let map, parkingIcon, locationIcon, parkingEventIcon, locationEventIcon;
 
     module.init = () => {
         this.map = L.map('map').setView([48.691928, 6.1888433], 13);
@@ -16,6 +16,14 @@ window.VeloNancy = (() => {
             popupAnchor:  [0, -35]
         });
 
+        this.locationEventIcon = L.icon({
+            iconUrl: 'public/img/location_event.png',
+
+            iconSize:     [32, 37],
+            iconAnchor:   [16, 35],
+            popupAnchor:  [0, -35]
+        });
+
         this.parkingIcon = L.icon({
             iconUrl: 'public/img/parking.png',
 
@@ -24,17 +32,32 @@ window.VeloNancy = (() => {
             popupAnchor:  [0, -35]
         });
 
-        let prLocation = module.query('/stations', 'GET')
+        this.parkingEventIcon = L.icon({
+            iconUrl: 'public/img/parking_event.png',
+
+            iconSize:     [32, 37],
+            iconAnchor:   [16, 35],
+            popupAnchor:  [0, -35]
+        });
+
+        let prLocation = module.query('/api/stations', 'GET')
         prLocation.done((data) => {
             $.each(data, (k, v) => {
                 module.addStation(v);
             })
         });
 
-        let prParkings = module.query('/parkings', 'GET')
+        let prParkings = module.query('/api/parkings', 'GET')
         prParkings.done((data) => {
             $.each(data, (k, v) => {
                 module.addParking(v);
+            })
+        });
+
+        let prEvents = module.query('/api/events', 'GET')
+        prEvents.done((data) => {
+            $.each(data, (k, v) => {
+                module.addEvent(v);
             })
         });
     }
@@ -75,6 +98,19 @@ window.VeloNancy = (() => {
         })
         .addTo(this.map)
         .bindPopup(`<h6>${data.nom.toUpperCase()}</h6><span>${data.adresse} - ${data.nom}</span>${places_libres}${horaire[0].outerHTML}`);
+    }
+
+    module.addEvent = (data) => {
+        let name = `<a href="/events/${data._id}">${data.nom.toUpperCase()}</a>`;
+        let adresse = data.id_rue + " " + data.adresse
+        let places_libres = $('<p>').text(`Places libres: ${data.capacite}/${data.places_disponibles}`)[0].outerHTML;
+        let open = ((data.statut == 'open') ? $('<p>').addClass('text-success').text('Ouvert') : $('<p>').addClass('text-danger').text('Fermé'))[0].outerHTML;
+        let seeMore = `<a href="/events/${data._id}">Voir plus</a>`;
+        L.marker([data.lat, data.lng], {
+            icon: (data.type == 'parkingsVoitures') ? this.parkingEventIcon : this.locationEventIcon
+        })
+        .addTo(this.map)
+        .bindPopup(`<h6>${name}</h6><span>${adresse}</span>${places_libres}${open}${seeMore}`);
     }
 
     return module;

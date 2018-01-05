@@ -21,3 +21,11 @@ exports.getParkings = (db, req, res) => {
         res.send(results);
     });
 };
+
+exports.getEvents = (db, req, res) => {
+    db.collection("events").find().toArray((error, results) => {
+        if (error) throw error;
+
+        res.send(results);
+    });
+};
