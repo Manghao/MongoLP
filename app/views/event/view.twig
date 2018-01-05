@@ -23,8 +23,8 @@
         <div class="card-body">
             <p class="card-text"><strong>Adresse:</strong> {{ event.id_rue }} {{ event.adresse }}</p>
             <p class="card-text"><strong>Capacité:</strong> {{ event.capacite }}</p>
-            <p class="card-text"><strong>Places disponibles:</strong> {% if event.statut == 'Ouvert' %}{{ event.places_disponibles }}{% else %}NC{% endif %}</p>
-            <p class="card-text"><strong>Statut:</strong> <span class="{% if event.statut == 'Ouvert' %}text-success{% else %}text-danger{% endif %}">{{ event.statut }}</span></p>
+            <p class="card-text"><strong>Places disponibles:</strong> {% if event.statut == 'open' %}{{ event.places_disponibles }}{% else %}NC{% endif %}</p>
+            <p class="card-text"><strong>Statut:</strong> <span class="{% if event.statut == 'open' %}text-success{% else %}text-danger{% endif %}">{% if event.statut == 'open' %}Ouvert{% else %}Fermé{% endif %}</span></p>
             <p class="card-text"><strong>Type:</strong> {{ event.type }}</p>
         </div>
     </div>
