@@ -1,5 +1,5 @@
 exports.getConfig = () => {
-    return '192.168.99.100:27017/tdmongo';
+    return 'manghao-site_lpcissie:lpcissie@mongodb-manghao-site.alwaysdata.net/manghao-site_mongolp';
 };
 
 exports.getApiKey = () => {
