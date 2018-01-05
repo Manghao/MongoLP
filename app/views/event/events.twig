@@ -3,9 +3,9 @@
 {% set title = 'Evénements' %}
 
 {% block content %}
-	{% if auth %}
+    {% if auth %}
 		<a class="btn btn-secondary mt-3" href="/event/create"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter un événement</a>
-	{% endif %}
+    {% endif %}
 
 	<div class="card mt-3 mb-3">
 		<h4 class="card-header">
@@ -14,39 +14,46 @@
 
 		<div class="card-body">
 			<div class="row">
-                {% for key, event in events %}
-					<div id="event-{{ key + 1 }}" class="card col-3 p-0 ml-5 mr-4 mb-5">
-						<h4 class="card-header">
-							<i class="user icon"></i><a href="events/{{ event.id }}">{{ event.nom }}</a>
-						</h4>
-						<div class="card-body">
-							<p class="card-text"><strong>Adresse:</strong> {{ event.id_rue }} {{ event.adresse }}</p>
-							<p class="card-text"><strong>Capacité:</strong> {{ event.capacite }}</p>
-							<p class="card-text"><strong>Places disponibles:</strong> {% if event.statut == 'Ouvert' %}{{ event.places_disponibles }}{% else %}NC{% endif %}</p>
-							<p class="card-text"><strong>Statut:</strong> <span class="{% if event.statut == 'Ouvert' %}text-success{% else %}text-danger{% endif %}">{{ event.statut }}</span></p>
-							<p class="card-text"><strong>Type:</strong> {{ event.type }}</p>
+                {% if events.length > 0 %}
+                    {% for key, event in events %}
+						<div id="event-{{ key + 1 }}" class="card col-3 p-0 ml-5 mr-4 mb-5">
+							<h4 class="card-header">
+								<i class="user icon"></i><a href="events/{{ event.id }}">{{ event.nom }}</a>
+							</h4>
+							<div class="card-body">
+								<p class="card-text"><strong>Adresse:</strong> {{ event.id_rue }} {{ event.adresse }}</p>
+								<p class="card-text"><strong>Capacité:</strong> {{ event.capacite }}</p>
+								<p class="card-text"><strong>Places disponibles:</strong> {% if event.statut == 'Ouvert' %}{{ event.places_disponibles }}{% else %}NC{% endif %}</p>
+								<p class="card-text"><strong>Statut:</strong> <span class="{% if event.statut == 'Ouvert' %}text-success{% else %}text-danger{% endif %}">{{ event.statut }}</span></p>
+								<p class="card-text"><strong>Type:</strong> {{ event.type }}</p>
+							</div>
 						</div>
-					</div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+					<p class="card-text">Pas d'événements disponibles.</p>
+                {% endif %}
 			</div>
 
-			<nav aria-label="...">
-				<ul class="pagination justify-content-center m-0">
-					<li class="page-item">
-						<a class="page-link" href="?page={{ (currentPage - 1) < 0 ? currentPage : (currentPage - 1) }}" tabindex="-1">&laquo;</a>
-					</li>
-                    {% for i in 1..totalPages %}
-						{% if i == currentPage %}
-							<li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-						{% else %}
-							<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-						{% endif %}
-                    {% endfor %}
-					<li class="page-item">
-						<a class="page-link" href="?page={{ (currentPage + 1) > totalPages ? currentPage : (currentPage + 1) }}">&raquo;</a>
-					</li>
-				</ul>
-			</nav>
+
+            {% if totalPages > 0 %}
+				<nav aria-label="...">
+					<ul class="pagination justify-content-center m-0">
+						<li class="page-item">
+							<a class="page-link" href="?page={{ (currentPage - 1) < 0 ? currentPage : (currentPage - 1) }}" tabindex="-1">&laquo;</a>
+						</li>
+                        {% for i in 1..totalPages %}
+                            {% if i == currentPage %}
+								<li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                            {% else %}
+								<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+						<li class="page-item">
+							<a class="page-link" href="?page={{ (currentPage + 1) > totalPages ? currentPage : (currentPage + 1) }}">&raquo;</a>
+						</li>
+					</ul>
+				</nav>
+            {% endif %}
 		</div>
 	</div>
 {% endblock %}
