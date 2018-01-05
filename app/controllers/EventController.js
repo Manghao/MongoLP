@@ -84,7 +84,7 @@ exports.deleteComment = (req, res) => {
 
 exports.createEvent = (req, res) => {
     let flash = req.flash();
-    res.render('event/create.twig', { query: req.query, success: flash.success, error: flash.error });
+    res.render('event/create.twig', { auth: req.session.user, query: req.query, success: flash.success, error: flash.error });
 };
 
 exports.storeEvent = (req, res) => {
