@@ -106,6 +106,7 @@ app.get('/events', (req, res) => {
 	EventController.getEvents(req, res);
 });
 
+
 app.get('/events/:id', (req, res) => {
 	EventController.getOneEvent(req, res);
 });
@@ -159,19 +160,21 @@ app.get('/map',(req, res) => {
 	AppController.getMap(req, res);
 });
 
-app.get('/stations', (req, res) => {
+app.get('/api/stations', (req, res) => {
 	AppController.getStations(db, req, res);
 });
 
-app.get('/parkings', (req, res) => {
+app.get('/api/parkings', (req, res) => {
 	AppController.getParkings(db, req, res);
+});
+
+app.get('/api/events', (req, res) => {
+	AppController.getEvents(db, req, res);
 });
 
 refreshCollection = () => {
 	console.log('\t- Reloading database');
 
-	db.collection("events").remove({});
-	db.collection("comments").remove({});
 	db.collection("parkingsVoitures").remove({});
 	db.collection("stationsVeloStan").remove({});
 
@@ -186,26 +189,12 @@ refreshCollection = () => {
 				let attributes = parkings[i].attributes;
 				let geometry = parkings[i].geometry;
 
-				let event = new Event({
-					nom: attributes['NOM'],
-					capacite: attributes['CAPACITE'],
-					places_disponibles: (attributes['PLACES'] == null ? '/' : attributes['PLACES']),
-					id_rue: attributes['ID'],
-					adresse: attributes['ADRESSE'],
-					statut: (attributes['PLACES'] == null ? 'Fermé' : 'Ouvert'),
-					lat: geometry['y'],
-					lng: geometry['x'],
-					type: 'parkingsVoitures'
-				});
-				event.save();
-
 				let park = {};
 				for(let key in attributes) {
 					park[key.toLowerCase()] = attributes[key];
 				}
 				park['geometry'] = geometry;
 				db.collection('parkingsVoitures').insert(park);
-
 			}
 		})
 		.on('error', (e) => {
@@ -236,19 +225,6 @@ refreshCollection = () => {
 							parser.parseString(body, (errParser, resultParser) => {
 								one.details = resultParser.station;
 								db.collection('stationsVeloStan').insert(one);
-
-								let event = new Event({
-									nom: one['name'],
-									capacite: one.details['total'],
-									places_disponibles: one.details['free'],
-									id_rue: one['number'],
-									adresse: one['address'],
-									statut: (one['open'] === 0 ? 'Fermé' : 'Ouvert'),
-									lat: one['lat'],
-									lng: one['lng'],
-									type: 'stationsVeloStan'
-								});
-								event.save();
 							});
 						})
 						.on('error', (e) => {

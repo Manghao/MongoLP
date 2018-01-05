@@ -120,7 +120,7 @@ exports.storeEvent = (req, res) => {
                             formatter: null
                         };
                         let geocoder = NodeGeocoder(options);
-                        console.log(street_num + " " + street + " " + city)
+
                         geocoder.geocode({address: street_num + " " + street + " " + city, country: 'France', zipcode: code}, function(err, result) {
                             if (err) throw err;
 
@@ -130,7 +130,7 @@ exports.storeEvent = (req, res) => {
                                     capacite: (capacity == '') ? 0 : capacity,
                                     places_disponibles: (free == '') ? 0 : free,
                                     id_rue: street_num,
-                                    adresse: street + " - " + city + ", " + code,
+                                    adresse: street + ", " + code + " " + city,
                                     statut: statut,
                                     lat: result[0].latitude,
                                     lng: result[0].longitude,
