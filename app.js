@@ -106,7 +106,6 @@ app.get('/events', (req, res) => {
 	EventController.getEvents(req, res);
 });
 
-
 app.get('/events/:id', (req, res) => {
 	EventController.getOneEvent(req, res);
 });
