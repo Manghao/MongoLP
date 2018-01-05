@@ -1,5 +1,5 @@
 exports.getConfig = () => {
-    return 'localhost:27017/MongoLP';
+    return 'manghao-site_lpcissie:lpcissie@mongodb-manghao-site.alwaysdata.net/manghao-site_mongolp';
 };
 
 exports.getApiKey = () => {
